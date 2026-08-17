@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { Search, ShoppingCart, User, Menu, ChevronDown, Globe, Heart } from "lucide-react";
 import { topBarLinks, navLinks } from "../mock";
 
-const PokeballLogo = () => (
-  <a href="#" className="flex items-center gap-2">
-    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="16" r="15" fill="#ffffff" stroke="#0b0b0e" strokeWidth="2" />
-      <path d="M1.5 16 A14.5 14.5 0 0 1 30.5 16 Z" fill="#ee1515" stroke="#0b0b0e" strokeWidth="2" />
-      <line x1="1.5" y1="16" x2="30.5" y2="16" stroke="#0b0b0e" strokeWidth="2" />
-      <circle cx="16" cy="16" r="4" fill="#ffffff" stroke="#0b0b0e" strokeWidth="2" />
-      <circle cx="16" cy="16" r="1.6" fill="#0b0b0e" />
-    </svg>
-    <span className="hidden sm:inline text-white font-extrabold tracking-tight text-[15px]">
-      Poké<span className="text-[#ffcb05]">Store</span>
+const LOGO_URL = "https://customer-assets-lqy194kg.emergentagent.net/job_digital-shop-430/artifacts/0vc1ra97_ArcaLOGO.jpeg";
+
+const ArcaLogo = () => (
+  <a href="#" className="flex items-center gap-2.5">
+    <img
+      src={LOGO_URL}
+      alt="ArcaTCG"
+      className="w-9 h-9 rounded-full object-cover ring-1 ring-[#26262a]"
+    />
+    <span className="hidden sm:inline text-white font-extrabold tracking-tight text-[16px]">
+      Arca<span className="text-[#ff9500]">TCG</span>
     </span>
   </a>
 );
@@ -35,7 +35,7 @@ const Header = () => {
 
       {/* Main nav */}
       <div className="flex items-center gap-3 lg:gap-6 px-4 lg:px-10 py-3">
-        <PokeballLogo />
+        <ArcaLogo />
 
         <nav className="hidden md:flex items-center gap-6 ml-4">
           {navLinks.map((l) => (
@@ -55,7 +55,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="Buscar cartas, boosters, ETBs..."
-              className="w-full bg-[#202024] rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder:text-[#8a8a8e] focus:outline-none focus:ring-2 focus:ring-[#ee1515]"
+              className="w-full bg-[#202024] rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder:text-[#8a8a8e] focus:outline-none focus:ring-2 focus:ring-[#ff9500]"
             />
           </div>
         </div>
@@ -71,7 +71,7 @@ const Header = () => {
           </button>
           <button aria-label="cart" className="hidden md:inline-flex w-9 h-9 items-center justify-center rounded-full hover:bg-[#202024] transition-colors relative">
             <ShoppingCart className="w-5 h-5 text-[#c6c6ca]" />
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ee1515] text-[10px] font-bold text-white flex items-center justify-center">2</span>
+            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff9500] text-[10px] font-bold text-[#101014] flex items-center justify-center">2</span>
           </button>
           <button className="epic-btn-primary px-4 py-2 rounded-md text-sm font-semibold">
             Entrar

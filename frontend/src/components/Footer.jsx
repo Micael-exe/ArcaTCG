@@ -16,14 +16,12 @@ const FooterLinks = ({ title, links }) => (
   </div>
 );
 
-const PokeballSmall = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32">
-    <circle cx="16" cy="16" r="15" fill="#ffffff" stroke="#0b0b0e" strokeWidth="2" />
-    <path d="M1.5 16 A14.5 14.5 0 0 1 30.5 16 Z" fill="#ee1515" stroke="#0b0b0e" strokeWidth="2" />
-    <line x1="1.5" y1="16" x2="30.5" y2="16" stroke="#0b0b0e" strokeWidth="2" />
-    <circle cx="16" cy="16" r="4" fill="#ffffff" stroke="#0b0b0e" strokeWidth="2" />
-    <circle cx="16" cy="16" r="1.6" fill="#0b0b0e" />
-  </svg>
+const ArcaLogoSmall = () => (
+  <img
+    src="https://customer-assets-lqy194kg.emergentagent.net/job_digital-shop-430/artifacts/0vc1ra97_ArcaLOGO.jpeg"
+    alt="ArcaTCG"
+    className="w-9 h-9 rounded-full object-cover ring-1 ring-[#26262a]"
+  />
 );
 
 const Footer = () => {
@@ -31,12 +29,12 @@ const Footer = () => {
     <footer className="mt-20 border-t border-[#1a1a1e] bg-[#0b0b0e]">
       <div className="px-4 lg:px-10 py-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
         <div className="col-span-2">
-          <div className="flex items-center gap-2">
-            <PokeballSmall />
-            <span className="text-white text-sm font-semibold">Poké<span className="text-[#ffcb05]">Store</span></span>
+          <div className="flex items-center gap-2.5">
+            <ArcaLogoSmall />
+            <span className="text-white text-sm font-semibold">Arca<span className="text-[#ff9500]">TCG</span></span>
           </div>
           <p className="text-[12px] text-[#8a8a8e] mt-3 max-w-sm leading-relaxed">
-            © 2025, PokéStore. Todos os direitos reservados. Pokémon e todos os personagens relacionados são marcas registradas da Nintendo, Game Freak e The Pokémon Company. Este é um projeto fictício de demonstração.
+            © 2025, ArcaTCG. Todos os direitos reservados. Sua loja geek especializada em cartas colecionáveis, boosters, decks e acessórios. Pokémon, Magic e todos os personagens relacionados são marcas registradas de seus respectivos donos.
           </p>
           <div className="flex items-center gap-3 mt-5">
             {[Facebook, Twitter, Instagram, Youtube, Twitch].map((Icon, i) => (
