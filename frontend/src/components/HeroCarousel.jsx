@@ -45,7 +45,7 @@ const HeroCarousel = () => {
                 {current.cta}
               </button>
               <button className="epic-btn-secondary px-6 py-3 rounded-md text-sm font-semibold">
-                Add to Wishlist
+                Lista de Desejos
               </button>
             </div>
           </div>

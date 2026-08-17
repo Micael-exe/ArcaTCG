@@ -5,7 +5,7 @@ import { Gift } from "lucide-react";
 const StatusBadge = ({ status }) => (
   <span
     className={`inline-block text-[10px] tracking-wider font-bold px-2 py-1 rounded ${
-      status === "FREE NOW" ? "bg-[#0074e4] text-white" : "bg-[#26262a] text-[#c6c6ca]"
+      status === "GRÁTIS AGORA" ? "bg-[#ee1515] text-white" : "bg-[#26262a] text-[#c6c6ca]"
     }`}
   >
     {status}
@@ -17,11 +17,11 @@ const FreeGames = () => {
     <section className="px-4 lg:px-10 pt-14">
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
-          <Gift className="w-5 h-5 text-[#0074e4]" />
-          <h2 className="text-xl font-bold tracking-tight text-white">Free Games</h2>
+          <Gift className="w-5 h-5 text-[#ffcb05]" />
+          <h2 className="text-xl font-bold tracking-tight text-white">Brindes & Promoções</h2>
         </div>
         <a href="#" className="text-sm text-[#c6c6ca] hover:text-white transition-colors">
-          View More
+          Ver mais
         </a>
       </div>
 

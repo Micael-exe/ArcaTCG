@@ -67,11 +67,11 @@
 .epic-btn-secondary:hover { background: #35353a; }
 
 .epic-btn-blue {
-  background: #0074e4;
+  background: #ee1515;
   color: #ffffff;
   transition: background-color 0.2s ease;
 }
-.epic-btn-blue:hover { background: #1a86ee; }
+.epic-btn-blue:hover { background: #ff2a2a; }
 
 /* Sidebar item */
 .sidebar-item {
@@ -88,7 +88,7 @@
 
 /* Discount badge */
 .discount-badge {
-  background: #26bbff;
+  background: #ffcb05;
   color: #101014;
   font-weight: 700;
 }

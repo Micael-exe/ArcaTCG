@@ -4,22 +4,22 @@ import { genres } from "../mock";
 
 const sidebarSections = [
   {
-    title: "Genres",
+    title: "Tipos & Raridades",
     items: genres.slice(0, 10),
   },
 ];
 
 const quickLinks = [
-  "Fortnite",
-  "Rocket League",
-  "Fall Guys",
-  "Unreal Tournament",
-  "Free Games",
-  "Achievements",
-  "Bundles",
-  "Editor's Picks",
-  "Recently Updated",
-  "On Sale",
+  "Booster Packs",
+  "Booster Box",
+  "Elite Trainer Box",
+  "Cartas Avulsas",
+  "Decks Prontos",
+  "Promo Cards",
+  "Acessórios",
+  "Sleeves",
+  "Toploaders",
+  "Ofertas",
 ];
 
 const LeftSidebar = () => {
@@ -27,13 +27,13 @@ const LeftSidebar = () => {
     <aside className="hidden xl:block sticky top-[112px] h-[calc(100vh-112px)] overflow-y-auto pr-2 epic-scroll">
       <div className="px-2 py-4 space-y-6">
         <div>
-          <h3 className="text-[12px] uppercase tracking-widest text-[#8a8a8e] mb-3 px-2">Discover</h3>
+          <h3 className="text-[12px] uppercase tracking-widest text-[#8a8a8e] mb-3 px-2">Categorias</h3>
           <ul className="space-y-1">
             {quickLinks.map((l) => (
               <li key={l}>
                 <a href="#" className="sidebar-item flex items-center justify-between text-[13px] text-[#c6c6ca] hover:text-white px-2 py-1.5 rounded-md hover:bg-[#1a1a1e]">
                   <span>{l}</span>
-                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100" />
+                  <ChevronRight className="w-3.5 h-3.5 opacity-40" />
                 </a>
               </li>
             ))}

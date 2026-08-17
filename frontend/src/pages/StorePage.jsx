@@ -20,9 +20,9 @@ const StorePage = () => {
           <main className="min-w-0">
             <HeroCarousel />
             <FreeGames />
-            <SectionRow title="Discover Something New" items={discoverGames} />
-            <SectionRow title="Most Popular" items={[...discoverGames].reverse()} />
-            <SectionRow title="On Sale Now" items={discoverGames.filter((g) => g.discount)} />
+            <SectionRow title="Descubra Novidades" items={discoverGames} />
+            <SectionRow title="Mais Populares" items={[...discoverGames].reverse()} />
+            <SectionRow title="Ofertas Imperdíveis" items={discoverGames.filter((g) => g.discount)} />
           </main>
 
           <div className="hidden xl:block pr-6 pt-6">

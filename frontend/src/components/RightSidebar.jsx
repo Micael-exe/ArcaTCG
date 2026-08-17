@@ -1,7 +1,10 @@
 import React from "react";
 import { topSellers, mostPlayed, upcomingGames, genres } from "../mock";
 
-const formatPrice = (p) => (p === 0 ? "Free" : `$${p.toFixed(2)}`);
+const formatPrice = (p) => {
+  if (p === 0) return "Grátis";
+  return `R$ ${p.toFixed(2).replace('.', ',')}`;
+};
 
 const RankRow = ({ title, items, showPrice }) => (
   <div>
@@ -32,12 +35,12 @@ const RankRow = ({ title, items, showPrice }) => (
 const RightSidebar = () => {
   return (
     <aside className="space-y-8">
-      <RankRow title="Top Sellers" items={topSellers} showPrice />
-      <RankRow title="Most Played" items={mostPlayed} showPrice={false} />
-      <RankRow title="Top Upcoming Wishlisted" items={upcomingGames.map((g, i) => ({ ...g, rank: i + 1, tag: g.releaseDate }))} showPrice={false} />
+      <RankRow title="Mais Vendidos" items={topSellers} showPrice />
+      <RankRow title="Em Alta" items={mostPlayed} showPrice={false} />
+      <RankRow title="Próximos Lançamentos" items={upcomingGames.map((g, i) => ({ ...g, rank: i + 1, tag: g.releaseDate }))} showPrice={false} />
 
       <div>
-        <h3 className="text-[15px] font-semibold text-white mb-3">Genres</h3>
+        <h3 className="text-[15px] font-semibold text-white mb-3">Tipos & Raridades</h3>
         <div className="flex flex-wrap gap-2">
           {genres.map((g) => (
             <a

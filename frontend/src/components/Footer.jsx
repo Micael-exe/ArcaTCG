@@ -16,20 +16,27 @@ const FooterLinks = ({ title, links }) => (
   </div>
 );
 
+const PokeballSmall = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15" fill="#ffffff" stroke="#0b0b0e" strokeWidth="2" />
+    <path d="M1.5 16 A14.5 14.5 0 0 1 30.5 16 Z" fill="#ee1515" stroke="#0b0b0e" strokeWidth="2" />
+    <line x1="1.5" y1="16" x2="30.5" y2="16" stroke="#0b0b0e" strokeWidth="2" />
+    <circle cx="16" cy="16" r="4" fill="#ffffff" stroke="#0b0b0e" strokeWidth="2" />
+    <circle cx="16" cy="16" r="1.6" fill="#0b0b0e" />
+  </svg>
+);
+
 const Footer = () => {
   return (
     <footer className="mt-20 border-t border-[#1a1a1e] bg-[#0b0b0e]">
       <div className="px-4 lg:px-10 py-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
         <div className="col-span-2">
           <div className="flex items-center gap-2">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="4" fill="#2A2A2E" />
-              <path d="M9 8h14v2.4H11.4V15H21v2.4h-9.6v4.2H23V24H9V8z" fill="#FFFFFF" />
-            </svg>
-            <span className="text-white text-sm font-semibold">Epic Games Store</span>
+            <PokeballSmall />
+            <span className="text-white text-sm font-semibold">Poké<span className="text-[#ffcb05]">Store</span></span>
           </div>
           <p className="text-[12px] text-[#8a8a8e] mt-3 max-w-sm leading-relaxed">
-            © 2025, Epic Games, Inc. All rights reserved. Epic, Epic Games, the Epic Games logo, Fortnite, the Fortnite logo, Unreal, Unreal Engine, the Unreal Engine logo, Unreal Tournament, and the Unreal Tournament logo are trademarks or registered trademarks of Epic Games, Inc.
+            © 2025, PokéStore. Todos os direitos reservados. Pokémon e todos os personagens relacionados são marcas registradas da Nintendo, Game Freak e The Pokémon Company. Este é um projeto fictício de demonstração.
           </p>
           <div className="flex items-center gap-3 mt-5">
             {[Facebook, Twitter, Instagram, Youtube, Twitch].map((Icon, i) => (
@@ -39,19 +46,19 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <FooterLinks title="Resources" links={["Company", "MegaGrants", "Support-A-Creator", "Publish on Epic Games", "Careers", "Students", "UnrealEd"]} />
-        <FooterLinks title="Games" links={["Fortnite", "Rocket League", "Fall Guys", "Unreal Tournament", "Infinity Blade", "Shadow Complex", "Robo Recall"]} />
-        <FooterLinks title="Marketplaces" links={["Epic Games Store", "Fab", "Sketchfab", "ArtStation", "Store Refund Policy", "Store EULA"]} />
-        <FooterLinks title="Tools" links={["Unreal Engine", "MetaHuman", "Twinmotion", "Megascans", "RealityScan", "Rad Game Tools"]} />
+        <FooterLinks title="Loja" links={["Booster Packs", "Booster Box", "Elite Trainer Box", "Cartas Avulsas", "Decks Prontos", "Acessórios", "Promo Cards"]} />
+        <FooterLinks title="Coleções" links={["Scarlet & Violet", "Paldea Evolved", "Obsidian Flames", "151", "Paradox Rift", "Twilight Masquerade", "Stellar Crown"]} />
+        <FooterLinks title="Ajuda" links={["Meus Pedidos", "Trocas e Devoluções", "Frete e Entrega", "Formas de Pagamento", "Fale Conosco", "Certificação PSA"]} />
+        <FooterLinks title="Comunidade" links={["Torneios", "Ligas Locais", "Guia de Iniciantes", "Blog", "Discord", "Programa Colecionador"]} />
       </div>
 
       <div className="border-t border-[#1a1a1e] px-4 lg:px-10 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-4 text-[11px] text-[#8a8a8e]">
-          <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Store Refund Policy</a>
+          <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
+          <a href="#" className="hover:text-white transition-colors">Política de Privacidade</a>
+          <a href="#" className="hover:text-white transition-colors">Política de Reembolso</a>
         </div>
-        <div className="text-[11px] text-[#8a8a8e]">English</div>
+        <div className="text-[11px] text-[#8a8a8e]">Português (BR)</div>
       </div>
     </footer>
   );
