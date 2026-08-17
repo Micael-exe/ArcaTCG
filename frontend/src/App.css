@@ -1,0 +1,123 @@
+/* Epic Games Store clone styles */
+.App {
+  min-height: 100vh;
+  background: #101014;
+  color: #ffffff;
+  font-family: 'Brutal Type', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Custom scrollbar - subtle */
+.epic-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
+.epic-scroll::-webkit-scrollbar-track { background: transparent; }
+.epic-scroll::-webkit-scrollbar-thumb { background: #2a2a2e; border-radius: 3px; }
+.epic-scroll::-webkit-scrollbar-thumb:hover { background: #3a3a3e; }
+
+/* Hero fade */
+.hero-fade {
+  background: linear-gradient(90deg, rgba(16,16,20,0.95) 0%, rgba(16,16,20,0.6) 40%, rgba(16,16,20,0.2) 70%, rgba(16,16,20,0) 100%);
+}
+
+.hero-fade-bottom {
+  background: linear-gradient(180deg, rgba(16,16,20,0) 60%, rgba(16,16,20,0.9) 100%);
+}
+
+/* Card hover */
+.game-card {
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+.game-card:hover {
+  transform: translateY(-2px);
+  background-color: #202024;
+}
+.game-card:hover .game-card-image {
+  filter: brightness(1.1);
+}
+.game-card-image {
+  transition: filter 0.25s ease;
+}
+
+/* Featured big card hover */
+.featured-card:hover .featured-card-img {
+  transform: scale(1.03);
+}
+.featured-card-img {
+  transition: transform 0.5s ease;
+}
+
+/* Nav link underline */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-link:hover { color: #ffffff; }
+
+/* Buttons */
+.epic-btn-primary {
+  background: #ffffff;
+  color: #101014;
+  transition: background-color 0.2s ease;
+}
+.epic-btn-primary:hover { background: #d5d5d5; }
+
+.epic-btn-secondary {
+  background: #26262a;
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+.epic-btn-secondary:hover { background: #35353a; }
+
+.epic-btn-blue {
+  background: #0074e4;
+  color: #ffffff;
+  transition: background-color 0.2s ease;
+}
+.epic-btn-blue:hover { background: #1a86ee; }
+
+/* Sidebar item */
+.sidebar-item {
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.sidebar-item:hover {
+  color: #ffffff;
+}
+
+/* Free game card overlay */
+.free-card-overlay {
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%);
+}
+
+/* Discount badge */
+.discount-badge {
+  background: #26bbff;
+  color: #101014;
+  font-weight: 700;
+}
+
+/* Small carousel arrow buttons */
+.carousel-arrow {
+  background: rgba(38, 38, 42, 0.9);
+  transition: background-color 0.2s ease;
+}
+.carousel-arrow:hover { background: rgba(60, 60, 65, 1); }
+
+/* Hide horizontal scrollbar for hero indicators */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Bottom gradient row for featured */
+.featured-side {
+  transition: background-color 0.2s ease;
+}
+.featured-side:hover { background-color: rgba(255,255,255,0.06); }
+.featured-side.active { background-color: rgba(255,255,255,0.1); }
+
+/* Skeleton */
+.shimmer {
+  background: linear-gradient(90deg, #1a1a1e 0%, #26262a 50%, #1a1a1e 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
