@@ -1,6 +1,7 @@
 import React from "react";
 import { freeGames } from "../mock";
-import { Gift } from "lucide-react";
+import { Gift, Plus } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 const StatusBadge = ({ status }) => (
   <span
@@ -13,6 +14,14 @@ const StatusBadge = ({ status }) => (
 );
 
 const FreeGames = () => {
+  const { addItem } = useCart();
+
+  const handleAdd = (g, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({ id: g.id, title: g.title, image: g.image, price: 0 });
+  };
+
   return (
     <section className="px-4 lg:px-10 pt-14">
       <div className="flex items-center justify-between mb-5">
@@ -27,7 +36,7 @@ const FreeGames = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {freeGames.map((g) => (
-          <a key={g.id} href="#" className="group block relative rounded-xl overflow-hidden bg-[#1a1a1e]">
+          <div key={g.id} className="group relative rounded-xl overflow-hidden bg-[#1a1a1e]">
             <div className="aspect-[16/9] overflow-hidden">
               <img
                 src={g.image}
@@ -41,7 +50,16 @@ const FreeGames = () => {
               <div className="mt-2 text-white text-[15px] font-semibold">{g.title}</div>
               <div className="text-[12px] text-[#c6c6ca]">{g.dates}</div>
             </div>
-          </a>
+            {g.status === "GRÁTIS AGORA" && (
+              <button
+                onClick={(e) => handleAdd(g, e)}
+                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-[#ff9500] hover:bg-[#ffab33] text-[#101014] font-semibold p-2 rounded-full"
+                aria-label="Adicionar"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         ))}
       </div>
     </section>

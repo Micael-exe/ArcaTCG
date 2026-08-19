@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { featuredGames } from "../mock";
+import { useCart } from "../context/CartContext";
 
 const HeroCarousel = () => {
+  const { addItem } = useCart();
   const [active, setActive] = useState(0);
   const current = featuredGames[active];
 
@@ -41,7 +43,9 @@ const HeroCarousel = () => {
               {current.description}
             </p>
             <div className="flex items-center gap-3">
-              <button className="epic-btn-primary px-6 py-3 rounded-md text-sm font-semibold">
+              <button
+                onClick={() => addItem({ id: current.id, title: current.title, image: current.hero, price: 199.9 })}
+                className="epic-btn-primary px-6 py-3 rounded-md text-sm font-semibold">
                 {current.cta}
               </button>
               <button className="epic-btn-secondary px-6 py-3 rounded-md text-sm font-semibold">

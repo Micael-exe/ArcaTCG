@@ -100,4 +100,150 @@
 
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
+
+user_problem_statement: |
+  ArcaTCG e-commerce needs:
+  - Auth: side-by-side Login + Register page, email/password + Emergent Google Auth
+  - Cart: add/remove/update quantity, subtotal + total, checkout, empty state
+  - Protected add-to-cart: non-logged user tries -> modal "Faça login" with "Fazer Login" button
+  - Backend: FastAPI + MongoDB, session cookie auth, JWT-ish token
+  - Google Auth via Emergent (auth.emergentagent.com)
+
+backend:
+  - task: "Auth endpoints (register, login, logout, /me, /session Emergent OAuth)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented POST /api/auth/register, POST /api/auth/login, POST /api/auth/logout, GET /api/auth/me, POST /api/auth/session (Emergent). Session token stored in MongoDB user_sessions collection with 7-day expiry, delivered as httpOnly cookie samesite=none secure=true. Uses UUID user_id and {_id:0} projection per playbook."
+      - working: true
+        agent: "testing"
+        comment: "✅ ALL AUTH TESTS PASSED (8/8). Tested: register new user (returns user_id/email/name + session_token cookie), duplicate email returns 400 'E-mail já cadastrado', login with correct credentials (returns user + cookie), login with wrong password returns 401, GET /me with Bearer token returns user info, GET /me without auth returns 401, logout deletes session, GET /me after logout returns 401. All endpoints working correctly. Note: /api/auth/session (Emergent OAuth) not tested as it requires real Emergent session_id."
+
+  - task: "Cart endpoints (GET /cart, POST /cart/add, /cart/update, /cart/remove, /cart/clear, /checkout)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "All cart endpoints require authentication via get_current_user dependency (cookie or Bearer). Add merges quantity if product_id exists. Update sets min=1. Checkout creates order and clears cart."
+      - working: true
+        agent: "testing"
+        comment: "✅ ALL CART TESTS PASSED (13/13). Tested: GET /cart without auth returns 401, GET /cart with auth returns empty items[], POST /cart/add adds item correctly, adding same product merges quantity (1+1=2), adding different product creates 2 items, POST /cart/update sets quantity to 5, updating to 0 clamps to min 1, POST /cart/remove removes item correctly, POST /checkout with items creates order (order_id + total) and clears cart, GET /cart after checkout is empty, POST /checkout with empty cart returns 400 'Carrinho vazio', POST /cart/clear empties cart. All endpoints working perfectly with proper auth protection."
+
+frontend:
+  - task: "AuthPage (login + register side by side) with Google button"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/AuthPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Two columns Login/Register. Email+password + Google via auth.emergentagent.com. Uses window.location.origin for redirect (no hardcode)."
+
+  - task: "AuthCallback + AppRouter hash detection"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/App.js, frontend/src/pages/AuthCallback.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "AppRouter checks useLocation().hash for session_id synchronously during render. AuthCallback uses useRef hasProcessed to prevent StrictMode double-exec. AuthProvider skips /me if hash has session_id."
+
+  - task: "Cart drawer with add/update/remove/checkout"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/CartDrawer.jsx, frontend/src/context/CartContext.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Drawer opens from Header cart icon. Shows empty state, list of items with +/- buttons, remove, subtotal, total, checkout button."
+
+  - task: "Protected add-to-cart with LoginRequiredModal"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/LoginRequiredModal.jsx, frontend/src/context/CartContext.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "addItem in CartContext calls requireLogin() first. If not authenticated, opens modal with text 'Faça login na sua conta para continuar com a compra.' + 'Fazer Login' button that navigates to /auth."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus: []
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: |
+      Backend implemented per Emergent Auth playbook. Please test:
+      1) POST /api/auth/register with {name,email,password} -> should set session_token cookie and return user info
+      2) POST /api/auth/login with same creds -> should set cookie and return user
+      3) GET /api/auth/me with cookie -> should return user; without cookie -> 401
+      4) POST /api/auth/logout -> deletes session
+      5) Cart flow: GET /api/cart (auth) -> empty; POST /api/cart/add {product_id,title,image,price,quantity} -> item added; add again -> quantity incremented; POST /api/cart/update {product_id,quantity:3}; POST /api/cart/remove {product_id}; POST /api/checkout with items -> creates order and empties cart
+      6) All cart endpoints must return 401 without auth
+      Note: /api/auth/session (Emergent OAuth) can't be tested without a real session_id from Emergent - skip that one.
+  - agent: "testing"
+    message: |
+      ✅ BACKEND TESTING COMPLETE - ALL TESTS PASSED (21/21)
+      
+      Created comprehensive test suite in /app/backend_test.py and executed against https://digital-shop-430.preview.emergentagent.com/api
+      
+      AUTH FLOW (8/8 passed):
+      - Register new user: ✅ Returns user_id, email, name + sets session_token cookie
+      - Duplicate email: ✅ Returns 400 "E-mail já cadastrado"
+      - Login correct creds: ✅ Returns user info + sets cookie
+      - Login wrong password: ✅ Returns 401 "E-mail ou senha inválidos"
+      - GET /me with auth: ✅ Returns correct user info
+      - GET /me without auth: ✅ Returns 401
+      - Logout: ✅ Deletes session successfully
+      - GET /me after logout: ✅ Returns 401
+      
+      CART FLOW (13/13 passed):
+      - GET /cart without auth: ✅ Returns 401
+      - GET /cart with auth: ✅ Returns empty items[]
+      - Add first product: ✅ Item added correctly
+      - Add same product: ✅ Quantity merged (1+1=2)
+      - Add different product: ✅ 2 items in cart
+      - Update quantity to 5: ✅ Updated correctly
+      - Update quantity to 0: ✅ Clamped to min 1
+      - Remove product: ✅ Item removed, 1 remains
+      - Checkout with items: ✅ Creates order (order_id + total), clears cart
+      - GET /cart after checkout: ✅ Empty
+      - Checkout empty cart: ✅ Returns 400 "Carrinho vazio"
+      - Clear cart: ✅ Cart emptied
+      
+      All backend APIs are working perfectly. Bearer token authentication works correctly. Session management is solid. Cart operations all function as expected with proper auth protection.
+      
+      Note: /api/auth/session (Emergent OAuth) was not tested as it requires a real session_id from Emergent auth flow.
+
 #====================================================================================================
