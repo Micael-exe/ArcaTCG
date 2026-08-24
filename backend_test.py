@@ -771,6 +771,390 @@ def test_cart_flow():
         log_test("POST /cart/clear", False, f"Exception: {str(e)}")
 
 # ============================================================================
+# ORDERS FLOW TESTS
+# ============================================================================
+
+def test_orders_flow():
+    """Test orders endpoint and order persistence"""
+    print("\n" + "="*70)
+    print("TESTING ORDERS FLOW")
+    print("="*70)
+    
+    # Create a new user for orders testing
+    timestamp = int(time.time() * 1000)
+    test_email = f"test_orders_{timestamp}@example.com"
+    test_password = "test1234"
+    test_name = "Test Orders"
+    
+    # Register user
+    print(f"\n1️⃣  Registering orders test user: {test_email}")
+    session_token = None
+    try:
+        response = requests.post(
+            f"{BASE_URL}/auth/register",
+            json={
+                "name": test_name,
+                "email": test_email,
+                "password": test_password
+            },
+            timeout=10
+        )
+        
+        if response.status_code == 200 and "session_token" in response.cookies:
+            session_token = response.cookies["session_token"]
+            log_test("Register orders test user", True, f"Got session token")
+        else:
+            log_test(
+                "Register orders test user",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+            return  # Can't continue without auth
+    except Exception as e:
+        log_test("Register orders test user", False, f"Exception: {str(e)}")
+        return
+    
+    headers = {"Authorization": f"Bearer {session_token}"}
+    
+    # Test 1: GET /orders with auth (should be empty initially)
+    print(f"\n2️⃣  Testing GET /orders with auth (should be empty)")
+    try:
+        response = requests.get(f"{BASE_URL}/orders", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "orders" in data and len(data["orders"]) == 0:
+                log_test("GET /orders returns empty array initially", True, f"orders: []")
+            else:
+                log_test(
+                    "GET /orders returns empty array initially",
+                    False,
+                    f"Expected empty orders, got: {data}"
+                )
+        else:
+            log_test(
+                "GET /orders returns empty array initially",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("GET /orders returns empty array initially", False, f"Exception: {str(e)}")
+    
+    # Test 2: GET /orders without auth (should return 401)
+    print(f"\n3️⃣  Testing GET /orders without auth")
+    try:
+        response = requests.get(f"{BASE_URL}/orders", timeout=10)
+        
+        if response.status_code == 401:
+            log_test("GET /orders without auth returns 401", True)
+        else:
+            log_test(
+                "GET /orders without auth returns 401",
+                False,
+                f"Expected 401, got {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("GET /orders without auth returns 401", False, f"Exception: {str(e)}")
+    
+    # Test 3: Add 2 items to cart
+    print(f"\n4️⃣  Adding 2 items to cart")
+    product1 = {
+        "product_id": "prod_booster_001",
+        "title": "Booster Pack Série 1",
+        "image": "https://via.placeholder.com/200x280/4F46E5/FFFFFF?text=Booster",
+        "price": 29.90,
+        "quantity": 1
+    }
+    product2 = {
+        "product_id": "prod_deck_002",
+        "title": "Deck Iniciante",
+        "image": "https://via.placeholder.com/200x280/10B981/FFFFFF?text=Deck",
+        "price": 49.90,
+        "quantity": 1
+    }
+    
+    try:
+        r1 = requests.post(f"{BASE_URL}/cart/add", headers=headers, json=product1, timeout=10)
+        r2 = requests.post(f"{BASE_URL}/cart/add", headers=headers, json=product2, timeout=10)
+        
+        if r1.status_code == 200 and r2.status_code == 200:
+            log_test("Add 2 items to cart", True, "Both items added")
+        else:
+            log_test(
+                "Add 2 items to cart",
+                False,
+                f"r1: {r1.status_code}, r2: {r2.status_code}"
+            )
+    except Exception as e:
+        log_test("Add 2 items to cart", False, f"Exception: {str(e)}")
+    
+    # Test 4: POST /checkout (creates order)
+    print(f"\n5️⃣  Testing POST /checkout (creates first order)")
+    first_order_id = None
+    try:
+        response = requests.post(f"{BASE_URL}/checkout", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if all(k in data for k in ["order_id", "total"]):
+                first_order_id = data["order_id"]
+                log_test(
+                    "POST /checkout creates first order",
+                    True,
+                    f"order_id={data['order_id']}, total={data['total']}"
+                )
+            else:
+                log_test(
+                    "POST /checkout creates first order",
+                    False,
+                    f"Missing fields: {data}"
+                )
+        else:
+            log_test(
+                "POST /checkout creates first order",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("POST /checkout creates first order", False, f"Exception: {str(e)}")
+    
+    # Test 5: GET /orders (should return 1 order with proper structure)
+    print(f"\n6️⃣  Testing GET /orders (should return 1 order)")
+    try:
+        response = requests.get(f"{BASE_URL}/orders", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "orders" in data and len(data["orders"]) == 1:
+                order = data["orders"][0]
+                required_fields = ["order_id", "user_id", "items", "total", "status", "created_at"]
+                if all(k in order for k in required_fields):
+                    # Verify items structure
+                    if len(order["items"]) == 2:
+                        item = order["items"][0]
+                        item_fields = ["product_id", "title", "image", "price", "quantity"]
+                        if all(k in item for k in item_fields):
+                            # Verify items match what was added
+                            product_ids = {i["product_id"] for i in order["items"]}
+                            expected_ids = {product1["product_id"], product2["product_id"]}
+                            if product_ids == expected_ids:
+                                log_test(
+                                    "GET /orders returns 1 order with correct structure",
+                                    True,
+                                    f"order_id={order['order_id']}, 2 items, status={order['status']}"
+                                )
+                            else:
+                                log_test(
+                                    "GET /orders returns 1 order with correct structure",
+                                    False,
+                                    f"Items mismatch: got {product_ids}, expected {expected_ids}"
+                                )
+                        else:
+                            log_test(
+                                "GET /orders returns 1 order with correct structure",
+                                False,
+                                f"Item missing fields: {item}"
+                            )
+                    else:
+                        log_test(
+                            "GET /orders returns 1 order with correct structure",
+                            False,
+                            f"Expected 2 items, got {len(order['items'])}"
+                        )
+                else:
+                    log_test(
+                        "GET /orders returns 1 order with correct structure",
+                        False,
+                        f"Order missing fields: {order.keys()}"
+                    )
+            else:
+                log_test(
+                    "GET /orders returns 1 order with correct structure",
+                    False,
+                    f"Expected 1 order, got: {data}"
+                )
+        else:
+            log_test(
+                "GET /orders returns 1 order with correct structure",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("GET /orders returns 1 order with correct structure", False, f"Exception: {str(e)}")
+    
+    # Test 6: Add another item and checkout again
+    print(f"\n7️⃣  Adding item and creating second order")
+    product3 = {
+        "product_id": "prod_sleeves_003",
+        "title": "Sleeves Premium",
+        "image": "https://via.placeholder.com/200x280/F59E0B/FFFFFF?text=Sleeves",
+        "price": 19.90,
+        "quantity": 2
+    }
+    
+    try:
+        r1 = requests.post(f"{BASE_URL}/cart/add", headers=headers, json=product3, timeout=10)
+        r2 = requests.post(f"{BASE_URL}/checkout", headers=headers, timeout=10)
+        
+        if r1.status_code == 200 and r2.status_code == 200:
+            log_test("Create second order", True, "Second order created")
+        else:
+            log_test(
+                "Create second order",
+                False,
+                f"add: {r1.status_code}, checkout: {r2.status_code}"
+            )
+    except Exception as e:
+        log_test("Create second order", False, f"Exception: {str(e)}")
+    
+    # Test 7: GET /orders (should return 2 orders, most recent first)
+    print(f"\n8️⃣  Testing GET /orders (should return 2 orders, sorted by created_at desc)")
+    try:
+        response = requests.get(f"{BASE_URL}/orders", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if "orders" in data and len(data["orders"]) == 2:
+                # Verify most recent first (should have product3)
+                first_order = data["orders"][0]
+                second_order = data["orders"][1]
+                
+                # First order should be the most recent (with product3)
+                first_has_product3 = any(i["product_id"] == product3["product_id"] for i in first_order["items"])
+                # Second order should be the older one (with product1 and product2)
+                second_has_product1 = any(i["product_id"] == product1["product_id"] for i in second_order["items"])
+                
+                if first_has_product3 and second_has_product1:
+                    log_test(
+                        "GET /orders returns 2 orders sorted by created_at desc",
+                        True,
+                        f"Most recent order first (order_id={first_order['order_id']})"
+                    )
+                else:
+                    log_test(
+                        "GET /orders returns 2 orders sorted by created_at desc",
+                        False,
+                        f"Orders not sorted correctly"
+                    )
+            else:
+                log_test(
+                    "GET /orders returns 2 orders sorted by created_at desc",
+                    False,
+                    f"Expected 2 orders, got: {len(data.get('orders', []))}"
+                )
+        else:
+            log_test(
+                "GET /orders returns 2 orders sorted by created_at desc",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("GET /orders returns 2 orders sorted by created_at desc", False, f"Exception: {str(e)}")
+
+
+# ============================================================================
+# AUTH PERSISTENCE TESTS
+# ============================================================================
+
+def test_auth_persistence():
+    """Test auth session persistence over time"""
+    print("\n" + "="*70)
+    print("TESTING AUTH PERSISTENCE")
+    print("="*70)
+    
+    # Create a new user
+    timestamp = int(time.time() * 1000)
+    test_email = f"persist.user.{timestamp}@example.com"
+    test_password = "persist123"
+    test_name = "Persist Test User"
+    
+    # Register user
+    print(f"\n1️⃣  Registering user for persistence test: {test_email}")
+    session_token = None
+    try:
+        response = requests.post(
+            f"{BASE_URL}/auth/register",
+            json={
+                "name": test_name,
+                "email": test_email,
+                "password": test_password
+            },
+            timeout=10
+        )
+        
+        if response.status_code == 200 and "session_token" in response.cookies:
+            session_token = response.cookies["session_token"]
+            log_test("Register user for persistence test", True, f"Got session token")
+        else:
+            log_test(
+                "Register user for persistence test",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+            return
+    except Exception as e:
+        log_test("Register user for persistence test", False, f"Exception: {str(e)}")
+        return
+    
+    headers = {"Authorization": f"Bearer {session_token}"}
+    
+    # Test 1: GET /auth/me immediately after register
+    print(f"\n2️⃣  Testing GET /auth/me immediately after register")
+    try:
+        response = requests.get(f"{BASE_URL}/auth/me", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == test_email:
+                log_test("GET /auth/me immediately after register", True, f"User: {data['email']}")
+            else:
+                log_test(
+                    "GET /auth/me immediately after register",
+                    False,
+                    f"Wrong user: {data}"
+                )
+        else:
+            log_test(
+                "GET /auth/me immediately after register",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("GET /auth/me immediately after register", False, f"Exception: {str(e)}")
+    
+    # Test 2: Wait 2 seconds and call GET /auth/me again
+    print(f"\n3️⃣  Waiting 2 seconds...")
+    time.sleep(2)
+    
+    print(f"\n4️⃣  Testing GET /auth/me after 2 seconds (session should persist)")
+    try:
+        response = requests.get(f"{BASE_URL}/auth/me", headers=headers, timeout=10)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("email") == test_email:
+                log_test(
+                    "GET /auth/me after 2 seconds (session persists)",
+                    True,
+                    f"Session still valid, user: {data['email']}"
+                )
+            else:
+                log_test(
+                    "GET /auth/me after 2 seconds (session persists)",
+                    False,
+                    f"Wrong user: {data}"
+                )
+        else:
+            log_test(
+                "GET /auth/me after 2 seconds (session persists)",
+                False,
+                f"Status {response.status_code}: {response.text}"
+            )
+    except Exception as e:
+        log_test("GET /auth/me after 2 seconds (session persists)", False, f"Exception: {str(e)}")
+
+
+# ============================================================================
 # MAIN
 # ============================================================================
 
@@ -781,11 +1165,11 @@ def main():
     print(f"Backend URL: {BASE_URL}")
     print(f"Test started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    # Run auth tests
-    test_auth_flow()
+    # Run orders tests (NEW)
+    test_orders_flow()
     
-    # Run cart tests
-    test_cart_flow()
+    # Run auth persistence tests (NEW)
+    test_auth_persistence()
     
     # Print summary
     success = print_summary()

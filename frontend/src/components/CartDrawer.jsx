@@ -7,15 +7,15 @@ import { useAuth } from "../context/AuthContext";
 const brl = (v) => `R$ ${v.toFixed(2).replace('.', ',')}`;
 
 const CartDrawer = () => {
-  const { items, drawerOpen, setDrawerOpen, updateQty, removeItem, totalPrice, checkout } = useCart();
+  const { items, drawerOpen, setDrawerOpen, updateQty, removeItem, totalPrice, checkout, setSuccessOrder } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleCheckout = async () => {
     try {
       const res = await checkout();
-      alert(`Pedido criado! Nº ${res.order_id}\nTotal: ${brl(res.total)}`);
       setDrawerOpen(false);
+      setSuccessOrder(res);
     } catch (e) {
       alert("Erro ao finalizar compra");
     }

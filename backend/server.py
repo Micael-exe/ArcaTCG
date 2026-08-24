@@ -353,6 +353,19 @@ async def checkout(user: User = Depends(get_current_user)):
     return {"order_id": order_id, "total": total, "status": "created"}
 
 
+@api_router.get("/orders")
+async def list_orders(user: User = Depends(get_current_user)):
+    cursor = db.orders.find({"user_id": user.user_id}, {"_id": 0}).sort("created_at", -1).limit(50)
+    orders = []
+    async for doc in cursor:
+        # normalize date
+        ca = doc.get("created_at")
+        if hasattr(ca, "isoformat"):
+            doc["created_at"] = ca.isoformat()
+        orders.append(doc)
+    return {"orders": orders}
+
+
 @api_router.get("/")
 async def root():
     return {"message": "ArcaTCG API", "version": "1.0"}

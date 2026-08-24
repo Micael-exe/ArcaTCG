@@ -124,6 +124,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ ALL AUTH TESTS PASSED (8/8). Tested: register new user (returns user_id/email/name + session_token cookie), duplicate email returns 400 'E-mail já cadastrado', login with correct credentials (returns user + cookie), login with wrong password returns 401, GET /me with Bearer token returns user info, GET /me without auth returns 401, logout deletes session, GET /me after logout returns 401. All endpoints working correctly. Note: /api/auth/session (Emergent OAuth) not tested as it requires real Emergent session_id."
+      - working: true
+        agent: "testing"
+        comment: "✅ AUTH PERSISTENCE VERIFIED (3/3). Tested: GET /auth/me immediately after register returns correct user, waited 2 seconds, GET /auth/me with same session_token still works correctly. Session persists as expected (7-day expiry configured)."
 
   - task: "Cart endpoints (GET /cart, POST /cart/add, /cart/update, /cart/remove, /cart/clear, /checkout)"
     implemented: true
@@ -139,6 +142,18 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ ALL CART TESTS PASSED (13/13). Tested: GET /cart without auth returns 401, GET /cart with auth returns empty items[], POST /cart/add adds item correctly, adding same product merges quantity (1+1=2), adding different product creates 2 items, POST /cart/update sets quantity to 5, updating to 0 clamps to min 1, POST /cart/remove removes item correctly, POST /checkout with items creates order (order_id + total) and clears cart, GET /cart after checkout is empty, POST /checkout with empty cart returns 400 'Carrinho vazio', POST /cart/clear empties cart. All endpoints working perfectly with proper auth protection."
+
+  - task: "Orders endpoint (GET /api/orders)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ ALL ORDERS TESTS PASSED (8/8). Tested: GET /orders with auth returns empty array initially, GET /orders without auth returns 401, added 2 items to cart and checkout creates order, GET /orders returns 1 order with correct structure (order_id, user_id, items with product_id/title/image/price/quantity, total, status=created, created_at), items match what was added to cart, created second order, GET /orders returns 2 orders sorted by created_at desc (most recent first). Order persistence and retrieval working perfectly."
 
 frontend:
   - task: "AuthPage (login + register side by side) with Google button"

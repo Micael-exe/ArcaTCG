@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, User, Menu, ChevronDown, Globe, Heart, LogOut } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, ChevronDown, Globe, Heart, LogOut, UserCircle2 } from "lucide-react";
 import { topBarLinks, navLinks } from "../mock";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -22,6 +22,7 @@ const ArcaLogo = () => (
 
 const UserMenu = ({ user, logout }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const initial = (user.name || user.email || "?").charAt(0).toUpperCase();
   return (
     <div className="relative">
@@ -42,8 +43,13 @@ const UserMenu = ({ user, logout }) => {
               <div className="text-[13px] text-white truncate">{user.name}</div>
               <div className="text-[11px] text-[#8a8a8e] truncate">{user.email}</div>
             </div>
-            <button onClick={() => { setOpen(false); logout(); }}
+            <button onClick={() => { setOpen(false); navigate("/perfil"); }}
               className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-[#c6c6ca] hover:bg-[#1a1a1e] hover:text-white transition-colors">
+              <UserCircle2 className="w-4 h-4" />
+              Meu Perfil
+            </button>
+            <button onClick={() => { setOpen(false); logout(); }}
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-[#c6c6ca] hover:bg-[#1a1a1e] hover:text-white transition-colors border-t border-[#26262a]">
               <LogOut className="w-4 h-4" />
               Sair
             </button>

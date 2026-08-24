@@ -11,6 +11,7 @@ export const CartProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [successOrder, setSuccessOrder] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchCart = useCallback(async () => {
@@ -76,6 +77,7 @@ export const CartProvider = ({ children }) => {
     items, totalItems, totalPrice, loading,
     drawerOpen, setDrawerOpen,
     loginModalOpen, setLoginModalOpen,
+    successOrder, setSuccessOrder,
     addItem, updateQty, removeItem, clearCart, checkout, requireLogin,
   };
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
