@@ -2,6 +2,7 @@ import React from "react";
 import { freeGames } from "../mock";
 import { Gift, Plus } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
 
 const StatusBadge = ({ status }) => (
   <span
@@ -39,8 +40,12 @@ const FreeGames = () => {
           <div key={g.id} className="group relative rounded-xl overflow-hidden bg-[#1a1a1e]">
             <div className="aspect-[16/9] overflow-hidden">
               <img
-                src={g.image}
+                src={optimizeImageUrl(g.image, { width: IMAGE_SIZES.freeGame })}
                 alt={g.title}
+                loading="lazy"
+                decoding="async"
+                width={IMAGE_SIZES.freeGame}
+                height={Math.round((IMAGE_SIZES.freeGame * 9) / 16)}
                 className="w-full h-full object-cover game-card-image group-hover:scale-105 transition-transform duration-500"
               />
             </div>

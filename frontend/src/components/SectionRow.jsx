@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { ChevronRight, ChevronLeft, Plus } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
 
 const formatPrice = (p) => {
   if (p === 0) return "Grátis";
@@ -20,8 +21,12 @@ export const GameCard = ({ game }) => {
     <div className="game-card block rounded-xl p-2 hover:bg-[#1a1a1e]">
       <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#1a1a1e] group">
         <img
-          src={game.image}
+          src={optimizeImageUrl(game.image, { width: IMAGE_SIZES.card })}
           alt={game.title}
+          loading="lazy"
+          decoding="async"
+          width={IMAGE_SIZES.card}
+          height={Math.round((IMAGE_SIZES.card * 4) / 3)}
           className="w-full h-full object-cover game-card-image"
         />
         {game.discount && (

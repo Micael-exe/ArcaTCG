@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Search, ShoppingCart, User, Menu, ChevronDown, Globe, Heart, LogOut, UserCircle2 } from "lucide-react";
 import { topBarLinks, navLinks } from "../mock";
 import { useAuth } from "../context/AuthContext";
@@ -80,11 +80,17 @@ const Header = () => {
         <ArcaLogo />
 
         <nav className="hidden md:flex items-center gap-6 ml-4">
-          {navLinks.map((l) => (
-            <a key={l.label} href={l.href} className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
-              {l.label}
-            </a>
-          ))}
+          {navLinks.map((l) =>
+            l.label === "Categorias" ? (
+              <Link key={l.label} to="/categorias" className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
+                {l.label}
+              </Link>
+            ) : (
+              <a key={l.label} href={l.href} className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
+                {l.label}
+              </a>
+            )
+          )}
         </nav>
 
         <div className="flex-1 max-w-[420px] mx-auto">

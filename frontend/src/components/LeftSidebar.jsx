@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { genres } from "../mock";
 
@@ -27,7 +28,10 @@ const LeftSidebar = () => {
     <aside className="hidden xl:block sticky top-[112px] h-[calc(100vh-112px)] overflow-y-auto pr-2 epic-scroll">
       <div className="px-2 py-4 space-y-6">
         <div>
-          <h3 className="text-[12px] uppercase tracking-widest text-[#8a8a8e] mb-3 px-2">Categorias</h3>
+          <h3 className="text-[12px] uppercase tracking-widest text-[#8a8a8e] mb-3 px-2 flex items-center justify-between">
+            <span>Categorias</span>
+            <Link to="/categorias" className="text-[#ff9500] normal-case tracking-normal text-[11px] hover:underline">Ver todas</Link>
+          </h3>
           <ul className="space-y-1">
             {quickLinks.map((l) => (
               <li key={l}>

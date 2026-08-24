@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { featuredGames } from "../mock";
 import { useCart } from "../context/CartContext";
+import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
 
 const HeroCarousel = () => {
   const { addItem } = useCart();
@@ -18,6 +19,14 @@ const HeroCarousel = () => {
   const goPrev = () => setActive((v) => (v - 1 + featuredGames.length) % featuredGames.length);
   const goNext = () => setActive((v) => (v + 1) % featuredGames.length);
 
+  // Preload the next slide's image so the carousel swap doesn't
+  // trigger a fresh, visible fetch every 7s.
+  useEffect(() => {
+    const nextIndex = (active + 1) % featuredGames.length;
+    const img = new Image();
+    img.src = optimizeImageUrl(featuredGames[nextIndex].hero, { width: IMAGE_SIZES.heroLarge });
+  }, [active]);
+
   return (
     <section className="relative w-full">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 px-4 lg:px-10 pt-6">
@@ -25,8 +34,10 @@ const HeroCarousel = () => {
         <div className="relative overflow-hidden rounded-2xl aspect-[16/9] lg:aspect-[16/8] bg-[#1a1a1e] featured-card group">
           <img
             key={current.id}
-            src={current.hero}
+            src={optimizeImageUrl(current.hero, { width: IMAGE_SIZES.heroLarge })}
             alt={current.title}
+            fetchpriority={active === 0 ? "high" : "auto"}
+            decoding="async"
             className="featured-card-img absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 hero-fade" />
@@ -94,7 +105,15 @@ const HeroCarousel = () => {
               }`}
             >
               <div className="w-14 h-14 rounded-md overflow-hidden flex-shrink-0 bg-[#1a1a1e]">
-                <img src={g.hero} alt={g.title} className="w-full h-full object-cover" />
+                <img
+                  src={optimizeImageUrl(g.hero, { width: IMAGE_SIZES.heroThumb })}
+                  alt={g.title}
+                  loading="lazy"
+                  decoding="async"
+                  width={IMAGE_SIZES.heroThumb}
+                  height={IMAGE_SIZES.heroThumb}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-semibold text-white truncate">{g.title}</div>

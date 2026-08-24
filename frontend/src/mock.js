@@ -118,6 +118,29 @@ export const genres = [
   'Fogo', 'Água', 'Grama', 'Elétrico', 'Psíquico', 'Lutador', 'Sombrio', 'Metálico', 'Dragão', 'Fada', 'Incolor', 'Ultra Raras', 'Full Art', 'Rainbow', 'Alt Art', 'Promo'
 ];
 
+// Color accents used on the Categories page to give each elemental
+// type a distinct, recognizable swatch (purely visual — this data
+// doesn't map to a product field yet, so it's shown as a "coming soon"
+// browsing shortcut rather than a working filter).
+export const genreColors = {
+  'Fogo': '#ef4444',
+  'Água': '#3b82f6',
+  'Grama': '#22c55e',
+  'Elétrico': '#eab308',
+  'Psíquico': '#ec4899',
+  'Lutador': '#c2410c',
+  'Sombrio': '#6b21a8',
+  'Metálico': '#94a3b8',
+  'Dragão': '#6366f1',
+  'Fada': '#f472b6',
+  'Incolor': '#a1a1aa',
+  'Ultra Raras': '#f59e0b',
+  'Full Art': '#14b8a6',
+  'Rainbow': '#a855f7',
+  'Alt Art': '#8b5cf6',
+  'Promo': '#06b6d4',
+};
+
 export const navLinks = [
   { label: 'Explorar', href: '#' },
   { label: 'Categorias', href: '#' },

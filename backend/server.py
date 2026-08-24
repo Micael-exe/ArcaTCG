@@ -1,6 +1,7 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException, Request, Response, Cookie, Header
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
@@ -380,6 +381,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Compress JSON/text responses over 500 bytes (gzip). Reduces payload
+# size for list endpoints (orders, products, etc.) with no client changes needed.
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
