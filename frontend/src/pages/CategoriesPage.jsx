@@ -6,10 +6,12 @@ import Footer from "../components/Footer";
 import { GameCard } from "../components/SectionRow";
 import { discoverGames, genres, genreColors } from "../mock";
 import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
+import { useLanguage } from "../context/LanguageContext";
 
-const ALL = "Todos";
+const ALL = "__all__";
 
 const CategoriesPage = () => {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState(ALL);
   const [activeTag, setActiveTag] = useState(null);
 
@@ -31,7 +33,7 @@ const CategoriesPage = () => {
     const set = new Set();
     discoverGames
       .filter((p) => p.genre === activeCategory)
-      .forEach((p) => (p.tags || []).forEach((t) => set.add(t)));
+      .forEach((p) => (p.tags || []).forEach((tag) => set.add(tag)));
     return Array.from(set);
   }, [activeCategory]);
 
@@ -56,19 +58,19 @@ const CategoriesPage = () => {
       <main className="max-w-[1400px] mx-auto px-4 lg:px-10">
         {/* Breadcrumb + title */}
         <div className="pt-6 text-[12px] text-[#8a8a8e]">
-          <Link to="/" className="hover:text-white transition-colors">Loja</Link>
+          <Link to="/" className="hover:text-white transition-colors">{t("categories.breadcrumbStore")}</Link>
           <span className="mx-1.5">/</span>
-          <span className="text-white">Categorias</span>
+          <span className="text-white">{t("categories.breadcrumbCategories")}</span>
         </div>
 
         <div className="flex items-center gap-3 mt-3">
           <div className="w-9 h-9 rounded-lg bg-[#1a1a1e] flex items-center justify-center">
             <LayoutGrid className="w-4.5 h-4.5 text-[#ff9500]" />
           </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">Todas as Categorias</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">{t("categories.title")}</h1>
         </div>
         <p className="text-[13px] text-[#8a8a8e] mt-2 max-w-xl">
-          Explore o catálogo por tipo de produto ou navegue pelos elementos do TCG.
+          {t("categories.subtitle")}
         </p>
 
         {/* Category tiles */}
@@ -82,8 +84,8 @@ const CategoriesPage = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[#26262a] to-[#1a1a1e]" />
               <div className="absolute inset-0 flex flex-col items-start justify-end p-3">
-                <span className="text-[13px] font-semibold text-white">Todos</span>
-                <span className="text-[11px] text-[#c6c6ca]">{discoverGames.length} produtos</span>
+                <span className="text-[13px] font-semibold text-white">{t("categories.all")}</span>
+                <span className="text-[11px] text-[#c6c6ca]">{discoverGames.length} {t("common.products")}</span>
               </div>
             </button>
 
@@ -105,7 +107,7 @@ const CategoriesPage = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-3">
                   <span className="text-[13px] font-semibold text-white">{c.name}</span>
-                  <span className="text-[11px] text-[#c6c6ca]">{c.count} produto{c.count > 1 ? "s" : ""}</span>
+                  <span className="text-[11px] text-[#c6c6ca]">{c.count} {c.count > 1 ? t("common.products") : t("common.product")}</span>
                 </div>
               </button>
             ))}
@@ -115,24 +117,24 @@ const CategoriesPage = () => {
         {/* Tag filters (only shown once a category is selected) */}
         {availableTags.length > 0 && (
           <section className="mt-6 flex flex-wrap items-center gap-2">
-            <span className="text-[12px] text-[#8a8a8e] mr-1">Filtrar por:</span>
+            <span className="text-[12px] text-[#8a8a8e] mr-1">{t("categories.filterBy")}</span>
             <button
               onClick={() => setActiveTag(null)}
               className={`text-[12px] px-3 py-1.5 rounded-full transition-colors ${
                 !activeTag ? "bg-[#ff9500] text-[#101014] font-semibold" : "bg-[#1a1a1e] text-[#c6c6ca] hover:bg-[#26262a] hover:text-white"
               }`}
             >
-              Todas as tags
+              {t("categories.allTags")}
             </button>
-            {availableTags.map((t) => (
+            {availableTags.map((tag) => (
               <button
-                key={t}
-                onClick={() => setActiveTag(t)}
+                key={tag}
+                onClick={() => setActiveTag(tag)}
                 className={`text-[12px] px-3 py-1.5 rounded-full transition-colors ${
-                  activeTag === t ? "bg-[#ff9500] text-[#101014] font-semibold" : "bg-[#1a1a1e] text-[#c6c6ca] hover:bg-[#26262a] hover:text-white"
+                  activeTag === tag ? "bg-[#ff9500] text-[#101014] font-semibold" : "bg-[#1a1a1e] text-[#c6c6ca] hover:bg-[#26262a] hover:text-white"
                 }`}
               >
-                {t}
+                {tag}
               </button>
             ))}
           </section>
@@ -142,9 +144,11 @@ const CategoriesPage = () => {
         <section id="categorias-resultados" className="pt-10 scroll-mt-24">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-xl font-bold tracking-tight text-white">
-              {activeCategory === ALL ? "Todos os Produtos" : activeCategory}
+              {activeCategory === ALL ? t("categories.allProducts") : activeCategory}
             </h2>
-            <span className="text-[12px] text-[#8a8a8e]">{results.length} resultado{results.length !== 1 ? "s" : ""}</span>
+            <span className="text-[12px] text-[#8a8a8e]">
+              {results.length} {results.length !== 1 ? t("common.results") : t("common.result")}
+            </span>
           </div>
 
           {results.length > 0 ? (
@@ -155,7 +159,7 @@ const CategoriesPage = () => {
             </div>
           ) : (
             <div className="text-center py-16 text-[#8a8a8e] text-sm">
-              Nenhum produto encontrado para esse filtro.
+              {t("categories.noResults")}
             </div>
           )}
         </section>
@@ -163,14 +167,14 @@ const CategoriesPage = () => {
         {/* Elemental browsing (decorative — not tied to a product field yet) */}
         <section className="pt-14 pb-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-bold tracking-tight text-white">Explorar por Elemento</h2>
-            <span className="text-[11px] text-[#8a8a8e]">Em breve</span>
+            <h2 className="text-xl font-bold tracking-tight text-white">{t("categories.exploreElements")}</h2>
+            <span className="text-[11px] text-[#8a8a8e]">{t("categories.comingSoon")}</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {genres.map((g) => (
               <span
                 key={g}
-                title="Em breve"
+                title={t("categories.comingSoon")}
                 className="text-[12px] px-3 py-1.5 rounded-full bg-[#1a1a1e] text-[#c6c6ca] flex items-center gap-2 opacity-80 cursor-not-allowed select-none"
               >
                 <span

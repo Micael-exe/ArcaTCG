@@ -1,26 +1,16 @@
 import React from "react";
 import { freeGames } from "../mock";
-import { Gift, Plus } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { Gift } from "lucide-react";
 import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
-
-const StatusBadge = ({ status }) => (
-  <span
-    className={`inline-block text-[10px] tracking-wider font-bold px-2 py-1 rounded ${
-      status === "GRÁTIS AGORA" ? "bg-[#ff9500] text-[#101014]" : "bg-[#26262a] text-[#c6c6ca]"
-    }`}
-  >
-    {status}
-  </span>
-);
+import { useLanguage } from "../context/LanguageContext";
 
 const FreeGames = () => {
-  const { addItem } = useCart();
+  const { t } = useLanguage();
 
-  const handleAdd = (g, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem({ id: g.id, title: g.title, image: g.image, price: 0 });
+  const statusLabel = (status) => {
+    if (status === "GRÁTIS AGORA") return t("freeGames.statusNow");
+    if (status === "EM BREVE") return t("freeGames.statusSoon");
+    return status;
   };
 
   return (
@@ -28,10 +18,10 @@ const FreeGames = () => {
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <Gift className="w-5 h-5 text-[#ff9500]" />
-          <h2 className="text-xl font-bold tracking-tight text-white">Brindes & Promoções</h2>
+          <h2 className="text-xl font-bold tracking-tight text-white">{t("freeGames.title")}</h2>
         </div>
         <a href="#" className="text-sm text-[#c6c6ca] hover:text-white transition-colors">
-          Ver mais
+          {t("common.viewMore")}
         </a>
       </div>
 
@@ -51,19 +41,16 @@ const FreeGames = () => {
             </div>
             <div className="absolute inset-0 free-card-overlay pointer-events-none" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <StatusBadge status={g.status} />
+              <span
+                className={`inline-block text-[10px] tracking-wider font-bold px-2 py-1 rounded ${
+                  g.status === "GRÁTIS AGORA" ? "bg-[#ff9500] text-[#101014]" : "bg-[#26262a] text-[#c6c6ca]"
+                }`}
+              >
+                {statusLabel(g.status)}
+              </span>
               <div className="mt-2 text-white text-[15px] font-semibold">{g.title}</div>
               <div className="text-[12px] text-[#c6c6ca]">{g.dates}</div>
             </div>
-            {g.status === "GRÁTIS AGORA" && (
-              <button
-                onClick={(e) => handleAdd(g, e)}
-                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-[#ff9500] hover:bg-[#ffab33] text-[#101014] font-semibold p-2 rounded-full"
-                aria-label="Adicionar"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            )}
           </div>
         ))}
       </div>

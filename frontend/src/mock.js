@@ -114,6 +114,24 @@ export const upcomingGames = [
   { id: 'u5', title: 'Prismatic Evolutions', image: 'https://images.pexels.com/photos/9560279/pexels-photo-9560279.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', releaseDate: 'Lança 09/12/2025' },
 ];
 
+// Unified, search-friendly product list combining every catalog with
+// a defined price into one consistent shape (id/title/image/price/
+// oldPrice/discount/genre/tags) so the search page and GameCard can
+// render any of them without special-casing missing fields.
+export const searchCatalog = [
+  ...discoverGames,
+  ...topSellers.map((t) => ({
+    id: t.id,
+    title: t.title,
+    image: t.image,
+    price: t.price,
+    oldPrice: null,
+    discount: null,
+    genre: 'Mais Vendido',
+    tags: ['Mais Vendido'],
+  })),
+];
+
 export const genres = [
   'Fogo', 'Água', 'Grama', 'Elétrico', 'Psíquico', 'Lutador', 'Sombrio', 'Metálico', 'Dragão', 'Fada', 'Incolor', 'Ultra Raras', 'Full Art', 'Rainbow', 'Alt Art', 'Promo'
 ];
@@ -142,20 +160,20 @@ export const genreColors = {
 };
 
 export const navLinks = [
-  { label: 'Explorar', href: '#' },
-  { label: 'Categorias', href: '#' },
-  { label: 'Novidades', href: '#' },
+  { key: 'nav.explore', href: '/' },
+  { key: 'nav.categories', href: '#' },
+  { key: 'nav.news', href: '#' },
 ];
 
 export const topBarLinks = [
-  { label: 'Loja', href: '#' },
-  { label: 'Booster Packs', href: '#' },
-  { label: 'Booster Box', href: '#' },
-  { label: 'Elite Trainer Box', href: '#' },
-  { label: 'Cartas Avulsas', href: '#' },
-  { label: 'Acessórios', href: '#' },
-  { label: 'Decks Prontos', href: '#' },
-  { label: 'Promo Cards', href: '#' },
-  { label: 'Torneios', href: '#' },
-  { label: 'Blog', href: '#' },
+  { key: 'topbar.store', href: '/' },
+  { key: 'topbar.boosterPacks', href: '#' },
+  { key: 'topbar.boosterBox', href: '#' },
+  { key: 'topbar.eliteTrainerBox', href: '#' },
+  { key: 'topbar.singleCards', href: '#' },
+  { key: 'topbar.accessories', href: '#' },
+  { key: 'topbar.readyDecks', href: '#' },
+  { key: 'topbar.promoCards', href: '#' },
+  { key: 'topbar.tournaments', href: '#' },
+  { key: 'topbar.blog', href: '#' },
 ];

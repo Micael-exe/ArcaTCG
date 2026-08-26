@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Search, ShoppingCart, User, Menu, ChevronDown, Globe, Heart, LogOut, UserCircle2 } from "lucide-react";
-import { topBarLinks, navLinks } from "../mock";
-import { useAuth } from "../context/AuthContext";
-import { useCart } from "../context/CartContext";
-
+import { Search, Menu, ChevronDown, Globe, Heart } from "lucide-react";
+import { topBarLinks, navLinks, searchCatalog } from "../mock";
+import { useLanguage } from "../context/LanguageContext";
 const LOGO_URL = "https://customer-assets-lqy194kg.emergentagent.net/job_digital-shop-430/artifacts/0vc1ra97_ArcaLOGO.jpeg";
 
 const ArcaLogo = () => (
-  <a href="/" className="flex items-center gap-2.5">
+  <Link to="/" className="flex items-center gap-2.5">
     <img
       src={LOGO_URL}
       alt="ArcaTCG"
@@ -17,42 +15,50 @@ const ArcaLogo = () => (
     <span className="hidden sm:inline text-white font-extrabold tracking-tight text-[16px]">
       Arca<span className="text-[#ff9500]">TCG</span>
     </span>
-  </a>
+  </Link>
 );
 
-const UserMenu = ({ user, logout }) => {
+// Strips accents and lowercases so search matches "pikachu" against
+// "Pikachu" and "café" against "cafe" the same way.
+const normalize = (s) =>
+  (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const LanguageSwitcher = () => {
+  const { language, setLanguage, languages } = useLanguage();
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const initial = (user.name || user.email || "?").charAt(0).toUpperCase();
+  const current = languages.find((l) => l.code === language) || languages[0];
+
   return (
-    <div className="relative">
-      <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 hover:bg-[#202024] rounded-full pl-1 pr-2 py-1 transition-colors">
-        {user.picture ? (
-          <img src={user.picture} alt={user.name} className="w-7 h-7 rounded-full object-cover" />
-        ) : (
-          <div className="w-7 h-7 rounded-full bg-[#ff9500] text-[#101014] font-bold text-sm flex items-center justify-center">{initial}</div>
-        )}
-        <span className="hidden md:inline text-[13px] text-white max-w-[120px] truncate">{user.name || user.email}</span>
-        <ChevronDown className="w-3 h-3 text-[#c6c6ca]" />
+    <div className="relative hidden md:block">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1 text-[13px] text-[#c6c6ca] hover:text-white transition-colors"
+      >
+        <Globe className="w-4 h-4" />
+        <span>{current.short}</span>
+        <ChevronDown className="w-3 h-3" />
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 w-52 bg-[#141418] border border-[#26262a] rounded-lg shadow-xl z-50 overflow-hidden">
-            <div className="px-4 py-3 border-b border-[#26262a]">
-              <div className="text-[13px] text-white truncate">{user.name}</div>
-              <div className="text-[11px] text-[#8a8a8e] truncate">{user.email}</div>
-            </div>
-            <button onClick={() => { setOpen(false); navigate("/perfil"); }}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-[#c6c6ca] hover:bg-[#1a1a1e] hover:text-white transition-colors">
-              <UserCircle2 className="w-4 h-4" />
-              Meu Perfil
-            </button>
-            <button onClick={() => { setOpen(false); logout(); }}
-              className="w-full flex items-center gap-2 px-4 py-2.5 text-[13px] text-[#c6c6ca] hover:bg-[#1a1a1e] hover:text-white transition-colors border-t border-[#26262a]">
-              <LogOut className="w-4 h-4" />
-              Sair
-            </button>
+          <div className="absolute right-0 top-full mt-2 w-44 bg-[#141418] border border-[#26262a] rounded-lg shadow-xl z-50 overflow-hidden">
+            {languages.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => {
+                  setLanguage(l.code);
+                  setOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2.5 text-[13px] transition-colors ${
+                  l.code === language ? "text-[#ff9500] bg-[#1a1a1e]" : "text-[#c6c6ca] hover:bg-[#1a1a1e] hover:text-white"
+                }`}
+              >
+                {l.label}
+              </button>
+            ))}
           </div>
         </>
       )}
@@ -60,10 +66,82 @@ const UserMenu = ({ user, logout }) => {
   );
 };
 
-const Header = () => {
+const SearchBox = ({ placeholder, viewAllLabel }) => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
-  const { totalItems, setDrawerOpen } = useCart();
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  const suggestions = useMemo(() => {
+    const q = normalize(query.trim());
+    if (q.length < 2) return [];
+    return searchCatalog
+      .filter((p) => normalize(p.title).includes(q) || (p.tags || []).some((t) => normalize(t).includes(q)))
+      .slice(0, 6);
+  }, [query]);
+
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const goToResults = (q) => {
+    const trimmed = q.trim();
+    setOpen(false);
+    navigate(`/busca?q=${encodeURIComponent(trimmed)}`);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim()) goToResults(query);
+  };
+
+  return (
+    <div ref={containerRef} className="relative w-full">
+      <form onSubmit={handleSubmit} className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8a8e]" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          placeholder={placeholder}
+          className="w-full bg-[#202024] rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder:text-[#8a8a8e] focus:outline-none focus:ring-2 focus:ring-[#ff9500]"
+        />
+      </form>
+
+      {open && suggestions.length > 0 && (
+        <div className="absolute left-0 right-0 top-full mt-2 bg-[#141418] border border-[#26262a] rounded-lg shadow-xl z-50 overflow-hidden">
+          {suggestions.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => goToResults(p.title)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[#1a1a1e] transition-colors"
+            >
+              <img src={p.image} alt="" className="w-8 h-8 rounded object-cover flex-shrink-0" />
+              <span className="text-[13px] text-[#c6c6ca] truncate">{p.title}</span>
+            </button>
+          ))}
+          <button
+            onClick={() => goToResults(query)}
+            className="w-full text-left px-3 py-2.5 text-[12px] text-[#ff9500] hover:bg-[#1a1a1e] border-t border-[#26262a] transition-colors"
+          >
+            {viewAllLabel} "{query}"
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Header = () => {
+  const { t } = useLanguage();
   const [showTopBar, setShowTopBar] = useState(true);
 
   return (
@@ -71,7 +149,9 @@ const Header = () => {
       {showTopBar && (
         <div className="hidden lg:flex items-center justify-center gap-6 px-6 py-2 text-[11px] text-[#8a8a8e] border-b border-[#1a1a1e]">
           {topBarLinks.map((l) => (
-            <a key={l.label} href={l.href} className="hover:text-white transition-colors">{l.label}</a>
+            <a key={l.key} href={l.href} className="hover:text-white transition-colors">
+              {t(l.key)}
+            </a>
           ))}
         </div>
       )}
@@ -81,60 +161,29 @@ const Header = () => {
 
         <nav className="hidden md:flex items-center gap-6 ml-4">
           {navLinks.map((l) =>
-            l.label === "Categorias" ? (
-              <Link key={l.label} to="/categorias" className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
-                {l.label}
+            l.key === "nav.categories" ? (
+              <Link key={l.key} to="/categorias" className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
+                {t(l.key)}
               </Link>
             ) : (
-              <a key={l.label} href={l.href} className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
-                {l.label}
+              <a key={l.key} href={l.href} className="nav-link text-[15px] font-medium text-[#c6c6ca] hover:text-white">
+                {t(l.key)}
               </a>
             )
           )}
         </nav>
 
         <div className="flex-1 max-w-[420px] mx-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a8a8e]" />
-            <input
-              type="text"
-              placeholder="Buscar cartas, boosters, ETBs..."
-              className="w-full bg-[#202024] rounded-full pl-10 pr-4 py-2 text-sm text-white placeholder:text-[#8a8a8e] focus:outline-none focus:ring-2 focus:ring-[#ff9500]"
-            />
-          </div>
+          <SearchBox placeholder={t("header.searchPlaceholder")} viewAllLabel={t("header.viewAllResultsFor")} />
         </div>
 
         <div className="flex items-center gap-3 ml-auto">
-          <button className="hidden md:flex items-center gap-1 text-[13px] text-[#c6c6ca] hover:text-white transition-colors">
-            <Globe className="w-4 h-4" />
-            <span>PT-BR</span>
-            <ChevronDown className="w-3 h-3" />
-          </button>
-          <button aria-label="wishlist" className="hidden md:inline-flex w-9 h-9 items-center justify-center rounded-full hover:bg-[#202024] transition-colors">
+          <LanguageSwitcher />
+          <button aria-label={t("header.wishlist")} className="hidden md:inline-flex w-9 h-9 items-center justify-center rounded-full hover:bg-[#202024] transition-colors">
             <Heart className="w-5 h-5 text-[#c6c6ca]" />
           </button>
-          <button onClick={() => setDrawerOpen(true)} aria-label="carrinho"
-            className="hidden md:inline-flex w-9 h-9 items-center justify-center rounded-full hover:bg-[#202024] transition-colors relative">
-            <ShoppingCart className="w-5 h-5 text-[#c6c6ca]" />
-            {totalItems > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#ff9500] text-[10px] font-bold text-[#101014] flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </button>
 
-          {user ? (
-            <UserMenu user={user} logout={logout} />
-          ) : (
-            <button onClick={() => navigate("/auth")} className="epic-btn-primary px-4 py-2 rounded-md text-sm font-semibold">
-              Entrar
-            </button>
-          )}
-
-          <button aria-label="account" className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#202024]">
-            <User className="w-5 h-5 text-[#c6c6ca]" />
-          </button>
-          <button aria-label="menu" className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#202024]" onClick={() => setShowTopBar(v => !v)}>
+          <button aria-label="menu" className="md:hidden w-9 h-9 flex items-center justify-center rounded-full hover:bg-[#202024]" onClick={() => setShowTopBar((v) => !v)}>
             <Menu className="w-5 h-5 text-[#c6c6ca]" />
           </button>
         </div>

@@ -1,21 +1,15 @@
 import React, { useRef } from "react";
-import { ChevronRight, ChevronLeft, Plus } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
+import { useLanguage } from "../context/LanguageContext";
 
-const formatPrice = (p) => {
-  if (p === 0) return "Grátis";
+const formatPrice = (p, freeLabel) => {
+  if (p === 0) return freeLabel;
   return `R$ ${p.toFixed(2).replace('.', ',')}`;
 };
 
 export const GameCard = ({ game }) => {
-  const { addItem } = useCart();
-
-  const handleAdd = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem(game);
-  };
+  const { tc, t } = useLanguage();
 
   return (
     <div className="game-card block rounded-xl p-2 hover:bg-[#1a1a1e]">
@@ -34,16 +28,9 @@ export const GameCard = ({ game }) => {
             {game.discount}
           </span>
         )}
-        <button
-          onClick={handleAdd}
-          className="absolute inset-x-2 bottom-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all bg-[#ff9500] hover:bg-[#ffab33] text-[#101014] font-semibold py-2 rounded-md text-xs flex items-center justify-center gap-1"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          Adicionar ao carrinho
-        </button>
       </div>
       <div className="pt-3 px-1 pb-1">
-        <div className="text-[11px] text-[#8a8a8e] mb-1">{game.tags?.[0] || "Produto"}</div>
+        <div className="text-[11px] text-[#8a8a8e] mb-1">{tc(game.tags?.[0]) || t("common.product")}</div>
         <div className="text-[14px] font-medium text-white line-clamp-1">{game.title}</div>
         <div className="mt-1 flex items-center gap-2 flex-wrap">
           {game.discount && (
@@ -52,9 +39,9 @@ export const GameCard = ({ game }) => {
             </span>
           )}
           {game.oldPrice && (
-            <span className="text-[12px] text-[#8a8a8e] line-through">{formatPrice(game.oldPrice)}</span>
+            <span className="text-[12px] text-[#8a8a8e] line-through">{formatPrice(game.oldPrice, t("common.free"))}</span>
           )}
-          <span className="text-[13px] text-white font-medium">{formatPrice(game.price)}</span>
+          <span className="text-[13px] text-white font-medium">{formatPrice(game.price, t("common.free"))}</span>
         </div>
       </div>
     </div>
@@ -62,6 +49,7 @@ export const GameCard = ({ game }) => {
 };
 
 const SectionRow = ({ title, items, viewMore = true }) => {
+  const { t } = useLanguage();
   const scrollerRef = useRef(null);
   const scrollBy = (dx) => scrollerRef.current?.scrollBy({ left: dx, behavior: "smooth" });
 
@@ -71,7 +59,7 @@ const SectionRow = ({ title, items, viewMore = true }) => {
         <h2 className="text-xl font-bold tracking-tight text-white">{title}</h2>
         <div className="flex items-center gap-2">
           {viewMore && (
-            <a href="#" className="text-sm text-[#c6c6ca] hover:text-white transition-colors mr-2">Ver mais</a>
+            <a href="#" className="text-sm text-[#c6c6ca] hover:text-white transition-colors mr-2">{t("common.viewMore")}</a>
           )}
           <button onClick={() => scrollBy(-400)} className="carousel-arrow w-8 h-8 rounded-full flex items-center justify-center" aria-label="scroll left">
             <ChevronLeft className="w-4 h-4 text-white" />

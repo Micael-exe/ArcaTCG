@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { featuredGames } from "../mock";
-import { useCart } from "../context/CartContext";
 import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
+import { useLanguage } from "../context/LanguageContext";
 
 const HeroCarousel = () => {
-  const { addItem } = useCart();
+  const { tc, t } = useLanguage();
+  const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const current = featuredGames[active];
 
   useEffect(() => {
-    const t = setInterval(() => {
+    const timer = setInterval(() => {
       setActive((v) => (v + 1) % featuredGames.length);
     }, 7000);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, []);
 
   const goPrev = () => setActive((v) => (v - 1 + featuredGames.length) % featuredGames.length);
@@ -45,7 +47,7 @@ const HeroCarousel = () => {
 
           <div className="absolute left-6 md:left-10 bottom-8 md:bottom-12 max-w-[520px]">
             <span className="inline-block text-[11px] tracking-[0.14em] font-semibold text-[#c6c6ca] mb-3">
-              {current.tag}
+              {tc(current.tag)}
             </span>
             <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
               {current.title}
@@ -55,12 +57,12 @@ const HeroCarousel = () => {
             </p>
             <div className="flex items-center gap-3">
               <button
-                onClick={() => addItem({ id: current.id, title: current.title, image: current.hero, price: 199.9 })}
+                onClick={() => navigate("/categorias")}
                 className="epic-btn-primary px-6 py-3 rounded-md text-sm font-semibold">
-                {current.cta}
+                {tc(current.cta)}
               </button>
               <button className="epic-btn-secondary px-6 py-3 rounded-md text-sm font-semibold">
-                Lista de Desejos
+                {t("hero.wishlist")}
               </button>
             </div>
           </div>

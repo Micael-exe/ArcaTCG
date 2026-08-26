@@ -1,5 +1,6 @@
 import React from "react";
 import { Facebook, Twitter, Youtube, Instagram, Twitch } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const FooterLinks = ({ title, links }) => (
   <div>
@@ -25,6 +26,9 @@ const ArcaLogoSmall = () => (
 );
 
 const Footer = () => {
+  const { t, language, languages } = useLanguage();
+  const currentLangLabel = languages.find((l) => l.code === language)?.label;
+
   return (
     <footer className="mt-20 border-t border-[#1a1a1e] bg-[#0b0b0e]">
       <div className="px-4 lg:px-10 py-12 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
@@ -34,7 +38,7 @@ const Footer = () => {
             <span className="text-white text-sm font-semibold">Arca<span className="text-[#ff9500]">TCG</span></span>
           </div>
           <p className="text-[12px] text-[#8a8a8e] mt-3 max-w-sm leading-relaxed">
-            © 2025, ArcaTCG. Todos os direitos reservados. Sua loja geek especializada em cartas colecionáveis, boosters, decks e acessórios. Pokémon, Magic e todos os personagens relacionados são marcas registradas de seus respectivos donos.
+            {t("footer.copyright")}
           </p>
           <div className="flex items-center gap-3 mt-5">
             {[Facebook, Twitter, Instagram, Youtube, Twitch].map((Icon, i) => (
@@ -44,19 +48,19 @@ const Footer = () => {
             ))}
           </div>
         </div>
-        <FooterLinks title="Loja" links={["Booster Packs", "Booster Box", "Elite Trainer Box", "Cartas Avulsas", "Decks Prontos", "Acessórios", "Promo Cards"]} />
-        <FooterLinks title="Coleções" links={["Scarlet & Violet", "Paldea Evolved", "Obsidian Flames", "151", "Paradox Rift", "Twilight Masquerade", "Stellar Crown"]} />
-        <FooterLinks title="Ajuda" links={["Meus Pedidos", "Trocas e Devoluções", "Frete e Entrega", "Formas de Pagamento", "Fale Conosco", "Certificação PSA"]} />
-        <FooterLinks title="Comunidade" links={["Torneios", "Ligas Locais", "Guia de Iniciantes", "Blog", "Discord", "Programa Colecionador"]} />
+        <FooterLinks title={t("footer.columnStore")} links={t("footer.items.store")} />
+        <FooterLinks title={t("footer.columnCollections")} links={t("footer.items.collections")} />
+        <FooterLinks title={t("footer.columnHelp")} links={t("footer.items.help")} />
+        <FooterLinks title={t("footer.columnCommunity")} links={t("footer.items.community")} />
       </div>
 
       <div className="border-t border-[#1a1a1e] px-4 lg:px-10 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-4 text-[11px] text-[#8a8a8e]">
-          <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
-          <a href="#" className="hover:text-white transition-colors">Política de Privacidade</a>
-          <a href="#" className="hover:text-white transition-colors">Política de Reembolso</a>
+          <a href="#" className="hover:text-white transition-colors">{t("footer.terms")}</a>
+          <a href="#" className="hover:text-white transition-colors">{t("footer.privacy")}</a>
+          <a href="#" className="hover:text-white transition-colors">{t("footer.refund")}</a>
         </div>
-        <div className="text-[11px] text-[#8a8a8e]">Português (BR)</div>
+        <div className="text-[11px] text-[#8a8a8e]">{currentLangLabel}</div>
       </div>
     </footer>
   );
