@@ -80,14 +80,62 @@ export const freeGames = [
 ];
 
 export const discoverGames = [
-  { id: 'd1', title: 'Booster Pack — Obsidian Flames', image: 'https://images.unsplash.com/photo-1647892591690-25cf830cda51', price: 29.9, oldPrice: null, discount: null, genre: 'Booster Pack', tags: ['Pack Individual'] },
-  { id: 'd2', title: 'Elite Trainer Box — 151', image: 'https://images.unsplash.com/photo-1666302936888-d41e661bc3dd', price: 449.9, oldPrice: null, discount: null, genre: 'Kit Colecionador', tags: ['ETB'] },
-  { id: 'd3', title: 'Charizard ex — Holo Rainbow', image: 'https://images.unsplash.com/photo-1611931960487-4932667079f1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwzfHxwb2tlbW9uJTIwdHJhZGluZyUyMGNhcmR8ZW58MHx8fHwxNzg2OTkzMDAxfDA&ixlib=rb-4.1.0&q=85', price: 899.0, oldPrice: 1299.0, discount: '-31%', genre: 'Ultra Rara', tags: ['Carta Avulsa'] },
-  { id: 'd4', title: 'Sleeves Pokébola x65', image: 'https://images.pexels.com/photos/8811594/pexels-photo-8811594.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', price: 39.9, oldPrice: null, discount: null, genre: 'Acessório', tags: ['Sleeve'] },
-  { id: 'd5', title: 'Booster Box — Paradox Rift', image: 'https://images.unsplash.com/photo-1666302937150-44f5af2ab474', price: 1099.0, oldPrice: null, discount: null, genre: 'Booster Box', tags: ['36 Pacotes'] },
-  { id: 'd6', title: 'Mini Portfolio 4 pockets', image: 'https://images.unsplash.com/photo-1628968434441-d9c1c66dcde7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxwb2tlbW9uJTIwY29sbGVjdGlvbnxlbnwwfHx8fDE3ODY5OTMwMDF8MA&ixlib=rb-4.1.0&q=85', price: 89.9, oldPrice: 129.9, discount: '-30%', genre: 'Acessório', tags: ['Portfolio'] },
-  { id: 'd7', title: 'Pikachu VMAX — Full Art', image: 'https://images.pexels.com/photos/9560279/pexels-photo-9560279.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940', price: 349.0, oldPrice: null, discount: null, genre: 'Ultra Rara', tags: ['Carta Avulsa'] },
-  { id: 'd8', title: 'Deck Temático Mewtwo', image: 'https://images.unsplash.com/photo-1613771404721-1f92d799e49f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwyfHxwb2tlbW9uJTIwdHJhZGluZyUyMGNhcmR8ZW58MHx8fHwxNzg2OTkzMDAxfDA&ixlib=rb-4.1.0&q=85', price: 79.9, oldPrice: 99.9, discount: '-20%', genre: 'Deck Pronto', tags: ['Starter'] },
+  {
+    id: 'd1', title: 'Booster Pack — Obsidian Flames', image: 'https://images.unsplash.com/photo-1647892591690-25cf830cda51',
+    price: 29.9, oldPrice: null, discount: null, genre: 'Booster Pack', tags: ['Pack Individual'],
+    year: 2023, stock: 42, manufacturer: 'The Pokémon Company', language: 'Inglês', condition: 'Lacrado',
+    description: 'Pacote individual da expansão Obsidian Flames, com 10 cartas aleatórias por pacote, incluindo a chance de cartas raras, holográficas e ex.',
+    buyLink: '',
+  },
+  {
+    id: 'd2', title: 'Elite Trainer Box — 151', image: 'https://images.unsplash.com/photo-1666302936888-d41e661bc3dd',
+    price: 449.9, oldPrice: null, discount: null, genre: 'Kit Colecionador', tags: ['ETB'],
+    year: 2023, stock: 8, manufacturer: 'The Pokémon Company', language: 'Inglês', condition: 'Lacrado',
+    description: 'Kit completo do treinador com 9 booster packs da coleção 151, moeda metálica exclusiva, dados de dano, marcadores e caixa de armazenamento.',
+    buyLink: '',
+  },
+  {
+    id: 'd3', title: 'Charizard ex — Holo Rainbow', image: 'https://images.unsplash.com/photo-1611931960487-4932667079f1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwzfHxwb2tlbW9uJTIwdHJhZGluZyUyMGNhcmR8ZW58MHx8fHwxNzg2OTkzMDAxfDA&ixlib=rb-4.1.0&q=85',
+    price: 899.0, oldPrice: 1299.0, discount: '-31%', genre: 'Ultra Rara', tags: ['Carta Avulsa'],
+    year: 2024, stock: 3, manufacturer: 'The Pokémon Company', language: 'Inglês', condition: 'Nova (Near Mint)',
+    description: 'Carta avulsa Charizard ex em holo rainbow, uma das ilustrações mais desejadas da coleção. Enviada em toploader rígido para proteção total.',
+    buyLink: '',
+  },
+  {
+    id: 'd4', title: 'Sleeves Pokébola x65', image: 'https://images.pexels.com/photos/8811594/pexels-photo-8811594.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+    price: 39.9, oldPrice: null, discount: null, genre: 'Acessório', tags: ['Sleeve'],
+    year: 2024, stock: 120, manufacturer: 'Ultra Pro', language: '—', condition: 'Novo',
+    description: 'Pacote com 65 sleeves protetoras tamanho padrão, estampa Pokébola, encaixe perfeito para cartas do TCG Pokémon.',
+    buyLink: '',
+  },
+  {
+    id: 'd5', title: 'Booster Box — Paradox Rift', image: 'https://images.unsplash.com/photo-1666302937150-44f5af2ab474',
+    price: 1099.0, oldPrice: null, discount: null, genre: 'Booster Box', tags: ['36 Pacotes'],
+    year: 2023, stock: 5, manufacturer: 'The Pokémon Company', language: 'Inglês', condition: 'Lacrado',
+    description: 'Caixa lacrada da expansão Paradox Rift, contém 36 pacotes com 10 cartas em cada. Ideal para quem busca completar coleções ou abrir boosters.',
+    buyLink: '',
+  },
+  {
+    id: 'd6', title: 'Mini Portfolio 4 pockets', image: 'https://images.unsplash.com/photo-1628968434441-d9c1c66dcde7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwxfHxwb2tlbW9uJTIwY29sbGVjdGlvbnxlbnwwfHx8fDE3ODY5OTMwMDF8MA&ixlib=rb-4.1.0&q=85',
+    price: 89.9, oldPrice: 129.9, discount: '-30%', genre: 'Acessório', tags: ['Portfolio'],
+    year: 2024, stock: 60, manufacturer: 'Ultra Pro', language: '—', condition: 'Novo',
+    description: 'Portfólio compacto com 4 bolsos por página (8 cartas por folha), capacidade para até 160 cartas. Fecho com zíper e alça de mão.',
+    buyLink: '',
+  },
+  {
+    id: 'd7', title: 'Pikachu VMAX — Full Art', image: 'https://images.pexels.com/photos/9560279/pexels-photo-9560279.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+    price: 349.0, oldPrice: null, discount: null, genre: 'Ultra Rara', tags: ['Carta Avulsa'],
+    year: 2022, stock: 6, manufacturer: 'The Pokémon Company', language: 'Inglês', condition: 'Nova (Near Mint)',
+    description: 'Carta avulsa Pikachu VMAX em Full Art, arte estendida cobrindo toda a carta. Peça de destaque para qualquer coleção.',
+    buyLink: '',
+  },
+  {
+    id: 'd8', title: 'Deck Temático Mewtwo', image: 'https://images.unsplash.com/photo-1613771404721-1f92d799e49f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwyfHxwb2tlbW9uJTIwdHJhZGluZyUyMGNhcmR8ZW58MHx8fHwxNzg2OTkzMDAxfDA&ixlib=rb-4.1.0&q=85',
+    price: 79.9, oldPrice: 99.9, discount: '-20%', genre: 'Deck Pronto', tags: ['Starter'],
+    year: 2023, stock: 15, manufacturer: 'The Pokémon Company', language: 'Português', condition: 'Lacrado',
+    description: 'Deck pronto para jogar com tema Mewtwo, 60 cartas balanceadas, ideal para iniciantes ou para expandir sua coleção de decks temáticos.',
+    buyLink: '',
+  },
 ];
 
 export const topSellers = [
@@ -131,6 +179,30 @@ export const searchCatalog = [
     tags: ['Mais Vendido'],
   })),
 ];
+
+// Looks up a product by id anywhere in the catalog. discoverGames
+// entries already carry full product-detail fields (year, stock,
+// description, buyLink, etc.); items that only exist in the lighter
+// searchCatalog shape (e.g. topSellers) get sensible defaults so the
+// product page never crashes on a partial record.
+export const getProductById = (id) => {
+  const full = discoverGames.find((p) => p.id === id);
+  if (full) return full;
+
+  const partial = searchCatalog.find((p) => p.id === id);
+  if (!partial) return null;
+
+  return {
+    year: null,
+    stock: 1,
+    manufacturer: 'The Pokémon Company',
+    language: 'Inglês',
+    condition: 'Lacrado',
+    description: '',
+    buyLink: '',
+    ...partial,
+  };
+};
 
 export const genres = [
   'Fogo', 'Água', 'Grama', 'Elétrico', 'Psíquico', 'Lutador', 'Sombrio', 'Metálico', 'Dragão', 'Fada', 'Incolor', 'Ultra Raras', 'Full Art', 'Rainbow', 'Alt Art', 'Promo'

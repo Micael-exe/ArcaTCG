@@ -93,6 +93,12 @@
   font-weight: 700;
 }
 
+/* Product page — image frame with a subtle brand-orange glow ring,
+   giving the PDP its own identity beyond a plain product photo. */
+.product-image-frame {
+  box-shadow: 0 0 0 1px #26262a, 0 0 40px -12px rgba(255, 149, 0, 0.35);
+}
+
 /* Small carousel arrow buttons */
 .carousel-arrow {
   background: rgba(38, 38, 42, 0.9);

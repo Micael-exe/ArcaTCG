@@ -8,6 +8,7 @@ import { LanguageProvider } from "./context/LanguageContext.jsx";
 const StorePage = lazy(() => import("./pages/StorePage.jsx"));
 const CategoriesPage = lazy(() => import("./pages/CategoriesPage.jsx"));
 const SearchPage = lazy(() => import("./pages/SearchPage.jsx"));
+const ProductPage = lazy(() => import("./pages/ProductPage.jsx"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
 
 const RouteFallback = () => (
@@ -23,6 +24,7 @@ function AppRouter() {
         <Route path="/" element={<StorePage />} />
         <Route path="/categorias" element={<CategoriesPage />} />
         <Route path="/busca" element={<SearchPage />} />
+        <Route path="/produto/:id" element={<ProductPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

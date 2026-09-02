@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Search, Menu, ChevronDown, Globe, Heart } from "lucide-react";
 import { topBarLinks, navLinks, searchCatalog } from "../mock";
 import { useLanguage } from "../context/LanguageContext";
+import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
 const LOGO_URL = "https://customer-assets-lqy194kg.emergentagent.net/job_digital-shop-430/artifacts/0vc1ra97_ArcaLOGO.jpeg";
 
 const ArcaLogo = () => (
@@ -121,10 +122,21 @@ const SearchBox = ({ placeholder, viewAllLabel }) => {
           {suggestions.map((p) => (
             <button
               key={p.id}
-              onClick={() => goToResults(p.title)}
+              onClick={() => {
+                setOpen(false);
+                navigate(`/produto/${p.id}`);
+              }}
               className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-[#1a1a1e] transition-colors"
             >
-              <img src={p.image} alt="" className="w-8 h-8 rounded object-cover flex-shrink-0" />
+              <img
+                src={optimizeImageUrl(p.image, { width: IMAGE_SIZES.heroThumb })}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                width={32}
+                height={32}
+                className="w-8 h-8 rounded object-cover flex-shrink-0"
+              />
               <span className="text-[13px] text-[#c6c6ca] truncate">{p.title}</span>
             </button>
           ))}

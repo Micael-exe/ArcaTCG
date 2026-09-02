@@ -1,0 +1,18 @@
+# Normalize all text files to LF line endings on checkout/commit,
+# regardless of the OS or editor used. This prevents huge, noisy diffs
+# where every line of a file appears "changed" just because of a
+# CRLF/LF mismatch between environments.
+* text=auto eol=lf
+
+# Binary files — never touch line endings, ever.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary

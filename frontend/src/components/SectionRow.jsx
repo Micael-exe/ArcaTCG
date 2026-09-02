@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Link } from "react-router-dom";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { optimizeImageUrl, IMAGE_SIZES } from "../lib/image";
 import { useLanguage } from "../context/LanguageContext";
@@ -12,7 +13,7 @@ export const GameCard = ({ game }) => {
   const { tc, t } = useLanguage();
 
   return (
-    <div className="game-card block rounded-xl p-2 hover:bg-[#1a1a1e]">
+    <Link to={`/produto/${game.id}`} className="game-card block rounded-xl p-2 hover:bg-[#1a1a1e]">
       <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#1a1a1e] group">
         <img
           src={optimizeImageUrl(game.image, { width: IMAGE_SIZES.card })}
@@ -44,7 +45,7 @@ export const GameCard = ({ game }) => {
           <span className="text-[13px] text-white font-medium">{formatPrice(game.price, t("common.free"))}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
