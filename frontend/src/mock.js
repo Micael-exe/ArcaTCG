@@ -180,11 +180,6 @@ export const searchCatalog = [
   })),
 ];
 
-// Looks up a product by id anywhere in the catalog. discoverGames
-// entries already carry full product-detail fields (year, stock,
-// description, buyLink, etc.); items that only exist in the lighter
-// searchCatalog shape (e.g. topSellers) get sensible defaults so the
-// product page never crashes on a partial record.
 export const getProductById = (id) => {
   const full = discoverGames.find((p) => p.id === id);
   if (full) return full;
@@ -204,6 +199,28 @@ export const getProductById = (id) => {
   };
 };
 
+export const genres = [
+  'Fogo', 'Água', 'Grama', 'Elétrico', 'Psíquico', 'Lutador', 'Sombrio', 'Metálico', 'Dragão', 'Fada', 'Incolor', 'Ultra Raras', 'Full Art', 'Rainbow', 'Alt Art', 'Promo'
+];
+
+export const genreColors = {
+  'Fogo': '#ef4444',
+  'Água': '#3b82f6',
+  'Grama': '#22c55e',
+  'Elétrico': '#eab308',
+  'Psíquico': '#ec4899',
+  'Lutador': '#c2410c',
+  'Sombrio': '#6b21a8',
+  'Metálico': '#94a3b8',
+  'Dragão': '#6366f1',
+  'Fada': '#f472b6',
+  'Incolor': '#a1a1aa',
+  'Ultra Raras': '#f59e0b',
+  'Full Art': '#14b8a6',
+  'Rainbow': '#a855f7',
+  'Alt Art': '#8b5cf6',
+  'Promo': '#06b6d4',
+};
 export const navLinks = [
   { key: 'nav.explore', href: '/' },
   { key: 'nav.categories', href: '#' },
